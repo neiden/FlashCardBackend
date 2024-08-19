@@ -3,7 +3,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Models;
+using Serilog;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class FlashcardController : ControllerBase
@@ -13,30 +16,67 @@ public class FlashcardController : ControllerBase
     public FlashcardController(FlashcardService flashcardService)
     {
         _flashcardService = flashcardService;
+
     }
 
+    [AllowAnonymous]
     [HttpGet]
-    public async Task<List<Flashcard>> GetFlashcards()
+    public async Task<IActionResult> GetFlashcards()
     {
-        return await _flashcardService.GetFlashcards();
+        Log.Information("GetFlashcards Controller called");
+        return Ok(await _flashcardService.GetFlashcards());
+    }
+
+
+    [HttpGet("{id}")]
+    public async Task<Flashcard> GetFlashcard(int id)
+    {
+
+        return await _flashcardService.GetFlashcard(id);
     }
 
     [HttpPost("create")]
-    public async Task<Flashcard> AddFlashcard(Flashcard flashcard)
+    public async Task<IActionResult> AddFlashcard(Flashcard flashcard)
     {
-        return await _flashcardService.AddFlashcard(flashcard);
+        var result = await _flashcardService.AddFlashcard(flashcard);
+        if (result == null)
+        {
+            return BadRequest();
+        }
+
+        return Ok(flashcard);
     }
 
     [HttpDelete("delete/{id}")]
-    public async Task<Flashcard> DeleteFlashcard(int id)
+    public async Task<IActionResult> DeleteFlashcard(int id)
     {
-        return await _flashcardService.DeleteFlashcard(id);
+        var result = await _flashcardService.DeleteFlashcard(id);
+        if (result == null)
+        {
+            return BadRequest();
+        }
+        return Ok();
     }
 
     [HttpPut("update")]
-    public async Task<Flashcard> UpdateFlashcard(Flashcard flashcard)
+    public async Task<IActionResult> UpdateFlashcard(Flashcard flashcard)
     {
-        return await _flashcardService.UpdateFlashcard(flashcard);
+        var result = await _flashcardService.UpdateFlashcard(flashcard);
+        if (result == null)
+        {
+            return BadRequest();
+        }
+
+        return Ok(flashcard);
+    }
+
+
+    [HttpGet("studySet/{studySetId}")]
+    public async Task<List<Flashcard>> GetStudySetFlashcards(int studySetId)
+    {
+        Log.Information("Trying to get flashcards for study set " + studySetId);
+        var result = await _flashcardService.GetStudySetCards(studySetId);
+        return result;
     }
 
 

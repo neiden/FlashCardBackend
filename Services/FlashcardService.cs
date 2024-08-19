@@ -7,8 +7,8 @@ namespace Services;
 public class FlashcardService
 {
     private readonly IConfiguration _config;
-    private readonly Repo _repo;
-    public FlashcardService(IConfiguration configuration, Repo repo)
+    private readonly IRepository _repo;
+    public FlashcardService(IConfiguration configuration, IRepository repo)
     {
         _config = configuration;
         _repo = repo;
@@ -17,7 +17,14 @@ public class FlashcardService
     [HttpGet]
     public async Task<List<Flashcard>> GetFlashcards()
     {
-        return _repo.GetFlashcards().Result;
+        return await _repo.GetFlashcards();
+
+    }
+
+    [HttpGet]
+    public async Task<Flashcard> GetFlashcard(int id)
+    {
+        return await _repo.GetFlashcardById(id);
     }
 
     [HttpPost]
@@ -39,6 +46,13 @@ public class FlashcardService
         return await _repo.UpdateFlashcard(flashcard);
     }
 
+
+    [HttpGet]
+    public async Task<List<Flashcard>> GetStudySetCards(int studySetId)
+    {
+
+        return await _repo.GetStudySetCards(studySetId);
+    }
 
 
 
