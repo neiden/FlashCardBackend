@@ -34,7 +34,7 @@ public class StudySetService
     }
 
     [HttpDelete]
-    public async Task DeleteStudySet(int id)
+    public async Task DeleteStudySet(Guid id)
     {
         await _repo.DeleteStudySet(id);
     }

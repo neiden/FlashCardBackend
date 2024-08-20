@@ -1,28 +1,37 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace FlashCardBack.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedLoginUserStudySetTables : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "StudySetId",
-                table: "Flashcard",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+            migrationBuilder.CreateTable(
+                name: "Flashcard",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StudySetId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Flashcard", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "StudySet",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -56,14 +65,13 @@ namespace FlashCardBack.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Flashcard");
+
+            migrationBuilder.DropTable(
                 name: "StudySet");
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropColumn(
-                name: "StudySetId",
-                table: "Flashcard");
         }
     }
 }

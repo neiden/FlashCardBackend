@@ -48,7 +48,7 @@ public class FlashcardService
 
 
     [HttpGet]
-    public async Task<List<Flashcard>> GetStudySetCards(int studySetId)
+    public async Task<List<Flashcard>> GetStudySetCards(Guid studySetId)
     {
 
         return await _repo.GetStudySetCards(studySetId);

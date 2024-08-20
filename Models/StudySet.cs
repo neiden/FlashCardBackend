@@ -1,7 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class StudySet
 {
-    public int Id { get; set; }
-    public int UserId { get; set; }
+    [Key]
+    public Guid Id { get; set; }
+    [ForeignKey("User")]
+    public int? UserId { get; set; }
     public required string Category { get; set; }
 
 }

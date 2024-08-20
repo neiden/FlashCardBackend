@@ -23,8 +23,8 @@ public class StudySetController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateStudySet(StudySet studySet)
     {
-        Log.Information("Creating new study set: " + studySet);
-        if (!ModelState.IsValid)
+        Log.Information("Creating new study set: " + studySet.Category, studySet.Id, studySet.UserId);
+        if (studySet.Category == null)
         {
             return BadRequest();
         }
@@ -112,7 +112,7 @@ public class StudySetController : ControllerBase
 
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteStudySet(int id)
+    public async Task<IActionResult> DeleteStudySet(Guid id)
     {
         Log.Information("Deleting study set with id: " + id);
         try

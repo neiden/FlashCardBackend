@@ -19,6 +19,13 @@ public class FlashcardContext : DbContext
         modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
         modelBuilder.Entity<Flashcard>().ToTable("Flashcard");
         modelBuilder.Entity<User>().ToTable("Users");
+        modelBuilder.Entity<StudySet>(
+            entity =>
+            {
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever();
+            });
         modelBuilder.Entity<StudySet>().ToTable("StudySet");
     }
+
 }

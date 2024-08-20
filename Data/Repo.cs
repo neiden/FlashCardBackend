@@ -1,6 +1,7 @@
 using Models;
 using Context;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 public class Repo : IRepository
 {
@@ -97,6 +98,9 @@ public class Repo : IRepository
 
     public async Task<StudySet> CreateStudySet(StudySet studySet)
     {
+        Guid id = Guid.NewGuid();
+        Log.Information("Creating study set with title: " + studySet.Category + " for user: " + studySet.UserId + " with id: " + id);
+        studySet.Id = id;
         _context.StudySets.Add(studySet);
         await _context.SaveChangesAsync();
         return studySet;
@@ -108,7 +112,7 @@ public class Repo : IRepository
         return studySets;
     }
 
-    public async Task<List<Flashcard>> GetStudySetCards(int studySetId)
+    public async Task<List<Flashcard>> GetStudySetCards(Guid studySetId)
     {
         var flashcards = await _context.Flashcards.Where(f => f.StudySetId == studySetId).ToListAsync();
         return flashcards;
@@ -121,7 +125,7 @@ public class Repo : IRepository
         return studySet;
     }
 
-    public async Task DeleteStudySet(int id)
+    public async Task DeleteStudySet(Guid id)
     {
         var studySet = await _context.StudySets.FirstOrDefaultAsync(s => s.Id == id);
         if (studySet != null)

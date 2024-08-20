@@ -72,7 +72,7 @@ public class FlashcardController : ControllerBase
 
 
     [HttpGet("studySet/{studySetId}")]
-    public async Task<List<Flashcard>> GetStudySetFlashcards(int studySetId)
+    public async Task<List<Flashcard>> GetStudySetFlashcards(Guid studySetId)
     {
         Log.Information("Trying to get flashcards for study set " + studySetId);
         var result = await _flashcardService.GetStudySetCards(studySetId);
